@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="d-flex justify-between align-center mb-4">
+    <h2>My Grades</h2>
+</div>
+
+<div class="glass-panel">
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Assessment Title</th>
+                    <th>Teacher</th>
+                    <th>Submitted At</th>
+                    <th>Grade</th>
+                    <th>Feedback</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for g in grades %}
+                <tr>
+                    <td>{{ g.assessment_title }}</td>
+                    <td>{{ g.teacher_name }}</td>
+                    <td>{{ g.submitted_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                    <td><span style="color:var(--gold); font-size:1.2em; font-weight:bold;">{{ g.grade }}</span></td>
+                    <td>{{ g.feedback or '-' }}</td>
+                </tr>
+                {% else %}
+                <tr><td colspan="5" style="text-align: center;">No grades received yet.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

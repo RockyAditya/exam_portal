@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="d-flex justify-between align-center mb-4">
+    <h2>Welcome, {{ profile.full_name }}! 👋</h2>
+</div>
+
+<div class="grid-cards">
+    <div class="stat-card glass-panel" style="background: linear-gradient(135deg, rgba(233, 64, 87, 0.1), rgba(138, 35, 135, 0.1));">
+        <div class="stat-icon" style="background: linear-gradient(45deg, #8A2387, #E94057);"><i class="fas fa-bell"></i></div>
+        <div class="stat-info">
+            <h3 style="color: #ff6b6b;">{{ pending_assessments }}</h3>
+            <p>Pending Assessments</p>
+        </div>
+    </div>
+    
+    <div class="stat-card glass-panel">
+        <div class="stat-icon" style="background: rgba(255,255,255,0.1);"><i class="fas fa-id-card"></i></div>
+        <div class="stat-info">
+            <h3 style="font-size: 1.2rem;">{{ profile.roll_number }}</h3>
+            <p>{{ profile.branch }} | {{ profile.course }}</p>
+        </div>
+    </div>
+</div>
+
+<div class="glass-panel p-4 mt-4">
+    <div style="padding: 20px;">
+        <h3>My Profile Details</h3>
+        <hr style="border-color: rgba(255,255,255,0.1); margin: 15px 0;">
+        <div class="form-grid">
+            <p><strong>Name:</strong> <span style="color:var(--text-secondary);">{{ profile.full_name }}</span></p>
+            <p><strong>Age:</strong> <span style="color:var(--text-secondary);">{{ profile.age }}</span></p>
+            <p><strong>Phone:</strong> <span style="color:var(--text-secondary);">{{ profile.phone }}</span></p>
+            <p><strong>Parent's Phone:</strong> <span style="color:var(--text-secondary);">{{ profile.parent_phone }}</span></p>
+        </div>
+        <p class="mt-4"><small style="color:var(--text-secondary);">* Contact your branch admin to edit these details.</small></p>
+    </div>
+</div>
+{% endblock %}

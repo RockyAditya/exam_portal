@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="d-flex justify-between align-center mb-4">
+    <h2>Submissions: {{ assessment.title }}</h2>
+    <a href="{{ url_for('teacher.assessments') }}" class="btn btn-small" style="background:rgba(255,255,255,0.1);color:white;"><i class="fas fa-arrow-left"></i> Back</a>
+</div>
+
+<div class="glass-panel">
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Roll Number</th>
+                    <th>Student Name</th>
+                    <th>Status</th>
+                    <th>Submitted At</th>
+                    <th>Submission File</th>
+                    <th>Grade Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for s in submissions %}
+                <tr>
+                    <td>{{ s.roll_number }}</td>
+                    <td>{{ s.full_name }}</td>
+                    <td>
+                        {% if s.id %}
+                            <span class="badge {% if s.grade is not none %}green{% else %}yellow{% endif %}">
+                                {% if s.grade is not none %}Graded: {{ s.grade }}{% else %}Submitted{% endif %}
+                            </span>
+                        {% else %}
+                            <span class="badge red">Pending</span>
+                        {% endif %}
+                    </td>
+                    <td>{% if s.submitted_at %}{{ s.submitted_at.strftime('%Y-%m-%d %H:%M') }}{% else %}-{% endif %}</td>
+                    <td>
+                        {% if s.file_path %}
+                            <a href="{{ url_for('static', filename=s.file_path.replace('static/', '')) }}" target="_blank" style="color:var(--text-primary); text-decoration:underline;">View Document</a>
+                        {% else %}
+                            -
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if s.id %}
+                        <form method="POST" action="{{ url_for('teacher.grade_submission', submission_id=s.id) }}" class="d-flex" style="gap:5px;">
+                            <input type="hidden" name="assessment_id" value="{{ assessment.id }}">
+                            <input type="number" name="grade" placeholder="Grade (0-100)" style="width:100px; padding:5px; border-radius:5px; background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2); color:white;" value="{{ s.grade or '' }}" required>
+                            <input type="text" name="feedback" placeholder="Short feedback" style="width:150px; padding:5px; border-radius:5px; background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2); color:white;" value="{{ s.feedback or '' }}">
+                            <button type="submit" class="btn btn-primary btn-small" style="padding: 5px 10px;">Save</button>
+                        </form>
+                        {% else %}
+                        <span style="color:var(--text-secondary); font-size:0.9em;">Waiting for submission...</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% else %}
+                <tr><td colspan="6" style="text-align: center;">No students in your branch.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

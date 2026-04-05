@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% set body_class = 'login-page' %}
+
+{% block content %}
+<div class="background-shapes">
+    <div class="shape shape-1"></div>
+    <div class="shape shape-2"></div>
+    <div class="shape shape-3"></div>
+</div>
+
+<div class="auth-container glass-panel">
+    <div class="auth-header">
+        <div class="auth-logo">
+            <i class="fas fa-graduation-cap"></i>
+        </div>
+        <h2>{% if is_register %}Join the Portal{% else %}Welcome Back{% endif %}</h2>
+        <p>{% if is_register %}Create your {{ role|capitalize }} account{% else %}Please login to continue{% endif %}</p>
+    </div>
+
+    <form method="POST" id="auth-form" class="auth-form {% if get_flashed_messages(category_filter=['error']) %}shake-animation{% endif %}">
+        <div class="input-group">
+            <label for="username"><i class="fas fa-user"></i> Username</label>
+            <input type="text" id="username" name="username" required placeholder="Enter username">
+        </div>
+        
+        <div class="input-group">
+            <label for="password"><i class="fas fa-lock"></i> Password</label>
+            <input type="password" id="password" name="password" required placeholder="Enter password">
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-block">
+            {% if is_register %}Register{% else %}Sign In{% endif %}
+        </button>
+    </form>
+
+    <div class="auth-footer">
+        {% if is_register %}
+            <p>Already have an account? <a href="{{ url_for('auth.login') }}">Login here</a></p>
+        {% else %}
+            <p>New Student? <a href="{{ url_for('auth.register_student') }}">Register here</a></p>
+            <p>New Teacher? <a href="{{ url_for('auth.register_teacher') }}">Register here</a></p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

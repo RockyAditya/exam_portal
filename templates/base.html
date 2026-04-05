@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exam Portal</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom CSS Base -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    {% block head %}{% endblock %}
+</head>
+<body class="{{ body_class }}">
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        {% if current_user.is_authenticated and current_user.profile_complete and current_user.role != 'Admin' or (current_user.is_authenticated and current_user.role == 'Admin') %}
+        <nav class="sidebar glass-panel">
+            <div class="sidebar-header">
+                <h2><i class="fas fa-graduation-cap"></i> Exam Portal</h2>
+            </div>
+            <ul class="nav-links">
+                {% if current_user.role == 'Admin' %}
+                    <li><a href="{{ url_for('admin.dashboard') }}"><i class="fas fa-chart-pie"></i> Dashboard</a></li>
+                    <li><a href="{{ url_for('admin.users') }}"><i class="fas fa-users"></i> Users</a></li>
+                    <li><a href="{{ url_for('admin.assessments') }}"><i class="fas fa-file-pdf"></i> Assessments</a></li>
+                {% elif current_user.role == 'Teacher' %}
+                    <li><a href="{{ url_for('teacher.dashboard') }}"><i class="fas fa-chalkboard-teacher"></i> Dashboard</a></li>
+                    <li><a href="{{ url_for('teacher.assessments') }}"><i class="fas fa-file-alt"></i> Assessments</a></li>
+                    <li><a href="{{ url_for('teacher.quizzes') }}"><i class="fas fa-question-circle"></i> Quizzes</a></li>
+                {% elif current_user.role == 'Student' %}
+                    <li><a href="{{ url_for('student.dashboard') }}"><i class="fas fa-user-graduate"></i> Dashboard</a></li>
+                    <li><a href="{{ url_for('student.assessments') }}"><i class="fas fa-book"></i> Pending Tasks</a></li>
+                    <li><a href="{{ url_for('student.grades') }}"><i class="fas fa-star"></i> Grades</a></li>
+                    <li><a href="{{ url_for('student.quizzes') }}"><i class="fas fa-stopwatch"></i> Quizzes</a></li>
+                {% endif %}
+            </ul>
+            <div class="nav-footer">
+                <a href="{{ url_for('auth.logout') }}" class="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</a>
+            </div>
+        </nav>
+        {% endif %}
+
+        <main class="main-content">
+            <!-- Toast Notifications Container -->
+            <div id="toast-container" class="toast-container">
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            <div class="toast glass-panel toast-{{ category }}">
+                                <i class="fas {% if category == 'success' %}fa-check-circle{% else %}fa-exclamation-circle{% endif %}"></i>
+                                <span>{{ message }}</span>
+                                <button class="toast-close" onclick="this.parentElement.remove()">&times;</button>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+            </div>
+
+            <div class="content-wrapper">
+                {% block content %}{% endblock %}
+            </div>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

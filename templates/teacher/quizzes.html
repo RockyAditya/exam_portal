@@ -1,0 +1,137 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="d-flex justify-between align-center mb-4">
+    <h2>MCQ Quizzes</h2>
+</div>
+
+<div class="glass-panel" style="padding: 30px; margin-bottom: 30px;">
+    <h3 class="mb-4">Create New Quiz</h3>
+    <form method="POST" id="quiz-form">
+        <div class="form-grid">
+            <div class="input-group">
+                <label for="title">Quiz Title</label>
+                <input type="text" id="title" name="title" required>
+            </div>
+            <div class="input-group">
+                <label for="time_limit_minutes">Time Limit (Minutes)</label>
+                <input type="number" id="time_limit_minutes" name="time_limit_minutes" min="1" required>
+            </div>
+        </div>
+
+        <div id="questions-container">
+            <!-- First Question -->
+            <div class="question-block" style="background: rgba(0,0,0,0.2); padding: 20px; border-radius: 8px; margin-bottom: 15px; border: 1px solid rgba(255,255,255,0.1);">
+                <div class="input-group">
+                    <label>Question 1</label>
+                    <textarea name="question_text[]" rows="2" required></textarea>
+                </div>
+                <div class="form-grid">
+                    <div class="input-group">
+                        <label>Option A</label>
+                        <input type="text" name="option_a[]" required>
+                    </div>
+                    <div class="input-group">
+                        <label>Option B</label>
+                        <input type="text" name="option_b[]" required>
+                    </div>
+                    <div class="input-group">
+                        <label>Option C</label>
+                        <input type="text" name="option_c[]" required>
+                    </div>
+                    <div class="input-group">
+                        <label>Option D</label>
+                        <input type="text" name="option_d[]" required>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label>Correct Option</label>
+                    <select name="correct_option[]" required>
+                        <option value="A">Option A</option>
+                        <option value="B">Option B</option>
+                        <option value="C">Option C</option>
+                        <option value="D">Option D</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        
+        <button type="button" id="add-question-btn" class="btn btn-small" style="background: rgba(255,255,255,0.1); color: white; margin-bottom: 20px;"><i class="fas fa-plus"></i> Add Another Question</button>
+        <br>
+        <button type="submit" class="btn btn-primary" style="background: linear-gradient(45deg, #12c2e9, #c471ed);"><i class="fas fa-paper-plane"></i> Publish Quiz</button>
+    </form>
+</div>
+
+<div class="glass-panel">
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Time Limit</th>
+                    <th>Created At</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for q in quizzes %}
+                <tr>
+                    <td>{{ q.title }}</td>
+                    <td>{{ q.time_limit_minutes }} mins</td>
+                    <td>{{ q.created_at.strftime('%Y-%m-%d') }}</td>
+                    <td>
+                        <a href="{{ url_for('teacher.quiz_results', quiz_id=q.id) }}" class="btn btn-primary btn-small"><i class="fas fa-chart-bar"></i> View Results</a>
+                    </td>
+                </tr>
+                {% else %}
+                <tr><td colspan="4" style="text-align: center;">No quizzes created yet.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock %}
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    let qCount = 1;
+    document.getElementById('add-question-btn').addEventListener('click', function() {
+        qCount++;
+        const container = document.getElementById('questions-container');
+        const block = document.createElement('div');
+        block.className = 'question-block';
+        block.style.cssText = 'background: rgba(0,0,0,0.2); padding: 20px; border-radius: 8px; margin-bottom: 15px; border: 1px solid rgba(255,255,255,0.1);';
+        block.innerHTML = `
+            <div class="d-flex justify-between align-center mb-2">
+                <label>Question ${qCount}</label>
+                <button type="button" class="btn btn-small remove-q-btn" style="background:transparent; color:#e74c3c;"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="input-group">
+                <textarea name="question_text[]" rows="2" required></textarea>
+            </div>
+            <div class="form-grid">
+                <div class="input-group"><label>Option A</label><input type="text" name="option_a[]" required></div>
+                <div class="input-group"><label>Option B</label><input type="text" name="option_b[]" required></div>
+                <div class="input-group"><label>Option C</label><input type="text" name="option_c[]" required></div>
+                <div class="input-group"><label>Option D</label><input type="text" name="option_d[]" required></div>
+            </div>
+            <div class="input-group">
+                <label>Correct Option</label>
+                <select name="correct_option[]" required>
+                    <option value="A">Option A</option>
+                    <option value="B">Option B</option>
+                    <option value="C">Option C</option>
+                    <option value="D">Option D</option>
+                </select>
+            </div>
+        `;
+        container.appendChild(block);
+        
+        block.querySelector('.remove-q-btn').addEventListener('click', function() {
+            block.remove();
+        });
+    });
+});
+</script>
+{% endblock %}

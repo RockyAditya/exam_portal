@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="d-flex justify-between align-center mb-4">
+    <h2>Admin Analytics Dashboard</h2>
+</div>
+
+<div class="grid-cards">
+    <div class="stat-card glass-panel">
+        <div class="stat-icon"><i class="fas fa-users"></i></div>
+        <div class="stat-info">
+            <h3>{{ student_count }}</h3>
+            <p>Total Students</p>
+        </div>
+    </div>
+    
+    <div class="stat-card glass-panel">
+        <div class="stat-icon" style="background: linear-gradient(45deg, #11998e, #38ef7d);"><i class="fas fa-chalkboard-teacher"></i></div>
+        <div class="stat-info">
+            <h3>{{ teacher_count }}</h3>
+            <p>Total Teachers</p>
+        </div>
+    </div>
+    
+    <div class="stat-card glass-panel">
+        <div class="stat-icon" style="background: linear-gradient(45deg, #f2994a, #f2c94c);"><i class="fas fa-code-branch"></i></div>
+        <div class="stat-info">
+            <h3>{{ branch_count }}</h3>
+            <p>Branches</p>
+        </div>
+    </div>
+    
+    <div class="stat-card glass-panel">
+        <div class="stat-icon" style="background: linear-gradient(45deg, #ee0979, #ff6a00);"><i class="fas fa-file-pdf"></i></div>
+        <div class="stat-info">
+            <h3>{{ assessment_count }}</h3>
+            <p>Assessments</p>
+        </div>
+    </div>
+</div>
+
+<div class="glass-panel p-4 mt-4">
+    <h3 class="mb-4" style="padding: 20px 20px 0;">Recent Submissions Log</h3>
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Student Name</th>
+                    <th>Assessment Title</th>
+                    <th>Submitted At</th>
+                    <th>Grade Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for sub in submissions %}
+                <tr>
+                    <td>{{ sub.student_name }}</td>
+                    <td>{{ sub.assessment_title }}</td>
+                    <td>{{ sub.submitted_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                    <td>
+                        {% if sub.grade is not none %}
+                            <span class="badge green">Graded: {{ sub.grade }}</span>
+                        {% else %}
+                            <span class="badge yellow">Pending Grading</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% else %}
+                <tr><td colspan="4" style="text-align: center;">No completed submissions yet.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

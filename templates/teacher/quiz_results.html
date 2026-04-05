@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="d-flex justify-between align-center mb-4">
+    <h2>Quiz Results: {{ quiz.title }}</h2>
+    <a href="{{ url_for('teacher.quizzes') }}" class="btn btn-small" style="background:rgba(255,255,255,0.1);color:white;"><i class="fas fa-arrow-left"></i> Back</a>
+</div>
+
+<div class="glass-panel">
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Roll Number</th>
+                    <th>Student Name</th>
+                    <th>Score</th>
+                    <th>Percentage</th>
+                    <th>Submitted At</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for r in results %}
+                <tr>
+                    <td>{{ r.roll_number }}</td>
+                    <td>{{ r.full_name }}</td>
+                    <td><b>{{ r.score }} / {{ r.total }}</b></td>
+                    <td>
+                        {% set pct = (r.score / r.total * 100)|round(1) %}
+                        {% if pct >= 80 %}
+                        <span style="color:#2ecc71;">{{ pct }}%</span>
+                        {% elif pct >= 50 %}
+                        <span style="color:#f1c40f;">{{ pct }}%</span>
+                        {% else %}
+                        <span style="color:#e74c3c;">{{ pct }}%</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ r.submitted_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                </tr>
+                {% else %}
+                <tr><td colspan="5" style="text-align: center;">No attempts recorded yet.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

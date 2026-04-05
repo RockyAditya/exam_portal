@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="d-flex justify-between align-center mb-4">
+    <h2>Attempting Quiz: {{ quiz.title }}</h2>
+    <div class="timer glass-panel" style="padding: 10px 20px; font-weight: bold; font-size: 1.2rem; background: rgba(231, 76, 60, 0.2); border-color: rgba(231, 76, 60, 0.5);">
+        <i class="fas fa-stopwatch"></i> <span id="time-remaining">{{ quiz.time_limit_minutes }}:00</span>
+    </div>
+</div>
+
+<div class="glass-panel" style="padding: 30px;">
+    <form method="POST" id="quiz-attempt-form">
+        {% for q in questions %}
+        <div class="question-container mb-4" style="padding-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.1);">
+            <h4 class="mb-4">{{ loop.index }}. {{ q.question_text }}</h4>
+            
+            <div class="options-group" style="display: flex; flex-direction: column; gap: 10px;">
+                <label style="cursor: pointer; padding: 10px; background: rgba(255,255,255,0.05); border-radius: 5px;">
+                    <input type="radio" name="q_{{ q.id }}" value="A" required> A) {{ q.option_a }}
+                </label>
+                <label style="cursor: pointer; padding: 10px; background: rgba(255,255,255,0.05); border-radius: 5px;">
+                    <input type="radio" name="q_{{ q.id }}" value="B" required> B) {{ q.option_b }}
+                </label>
+                <label style="cursor: pointer; padding: 10px; background: rgba(255,255,255,0.05); border-radius: 5px;">
+                    <input type="radio" name="q_{{ q.id }}" value="C" required> C) {{ q.option_c }}
+                </label>
+                <label style="cursor: pointer; padding: 10px; background: rgba(255,255,255,0.05); border-radius: 5px;">
+                    <input type="radio" name="q_{{ q.id }}" value="D" required> D) {{ q.option_d }}
+                </label>
+            </div>
+        </div>
+        {% endfor %}
+        <button type="submit" class="btn btn-primary" style="background: linear-gradient(45deg, #12c2e9, #c471ed);"><i class="fas fa-check-double"></i> Submit Quiz</button>
+    </form>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    let timeLeft = {{ quiz.time_limit_minutes * 60 }};
+    const timerDisplay = document.getElementById('time-remaining');
+    const form = document.getElementById('quiz-attempt-form');
+    
+    const interval = setInterval(function() {
+        timeLeft--;
+        let minutes = Math.floor(timeLeft / 60);
+        let seconds = timeLeft % 60;
+        
+        timerDisplay.textContent = `${minutes}:${seconds < 10 ? '0' + seconds : seconds}`;
+        
+        if (timeLeft <= 0) {
+            clearInterval(interval);
+            alert("Time is up! Your answers will be submitted automatically.");
+            form.submit();
+        }
+    }, 1000);
+});
+</script>
+{% endblock %}

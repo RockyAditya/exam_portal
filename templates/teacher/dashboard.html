@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="d-flex justify-between align-center mb-4">
+    <h2>Teacher Dashboard - {{ current_user.branch }}</h2>
+</div>
+
+<div class="grid-cards">
+    <div class="stat-card glass-panel">
+        <div class="stat-icon" style="background: linear-gradient(45deg, #11998e, #38ef7d);"><i class="fas fa-users"></i></div>
+        <div class="stat-info">
+            <h3>{{ student_count }}</h3>
+            <p>Students in Branch</p>
+        </div>
+    </div>
+    
+    <div class="stat-card glass-panel">
+        <div class="stat-icon" style="background: linear-gradient(45deg, #f2994a, #f2c94c);"><i class="fas fa-file-pdf"></i></div>
+        <div class="stat-info">
+            <h3>{{ assessment_count }}</h3>
+            <p>My Assessments</p>
+        </div>
+    </div>
+</div>
+
+<div class="glass-panel p-4 mt-4">
+    <div style="padding: 20px;">
+        <h3>Quick Actions</h3>
+        <p>Get started by creating your first assessment or MCQ Quiz.</p>
+        <div class="d-flex mt-4" style="gap: 15px;">
+            <a href="{{ url_for('teacher.assessments') }}" class="btn btn-primary"><i class="fas fa-plus"></i> Create Assessment</a>
+            <a href="{{ url_for('teacher.quizzes') }}" class="btn btn-primary" style="background: linear-gradient(45deg, #12c2e9, #c471ed);"><i class="fas fa-plus"></i> Create Quiz</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
